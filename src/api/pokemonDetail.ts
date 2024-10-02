@@ -52,14 +52,17 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
   );
 
   // 種族値の取得
-  const baseStats = data.stats.map((stat: PokemonStat) => {
+  const baseStats = await Promise.all(data.stats.map( async (stat: PokemonStat) => {
     // 日本語名を取得
-    
+    const japaneseStatData = await fetch(`https://pokeapi.co/api/v2/stat/${stat.stat.name}`);
+    const japaneseStatDataJson = await japaneseStatData.json();
     return {
-      name: stat.stat.name,
+      name: japaneseStatDataJson.names.find((name: Name) => name.language.name === "ja-Hrkt").name,
       value: stat.base_stat,
     };
-  });
+  }));
+
+  console.log(baseStats);
 
   // 説明文の取得
   const flavorTextEntry = speciesData.flavor_text_entries.find(
@@ -73,7 +76,7 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     id: data.id,
     name: data.name,
     japaneseName,
-    image: data.sprites.front_default,
+    image: data.sprites.other['official-artwork'].front_default,
     types,
     abilities,
     description,

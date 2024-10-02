@@ -35,15 +35,38 @@ const PokemonDetail: React.FC = () => {
             <PokemonTypeLabel key={type} type={type} />
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-2 w-fit">
-          {data?.abilities?.map((ability) => (
-            <span key={ability}>{ability}</span>
-          ))}
+          <span className="w-fit whitespace-nowrap text-right">特性</span>
+        <div className="flex gap-2">
+          <div className="grid grid-cols-2 gap-2 w-full">
+            {data?.abilities?.map((ability) => (
+              <span key={ability}>{ability}</span>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 w-fit">
+        <div className="mt-4 grid grid-cols-1 gap-x-2 w-full">
           {data?.baseStats?.map((stat) => (
-            <span key={stat.name}>{stat.name}: {stat.value}</span>
+            <div key={stat.name} className="flex items-center">
+              <span className="w-24 text-right mr-2">{stat.name}</span>
+              <div className="flex-1 bg-gray-200 rounded-full h-4">
+                <div
+                  className="bg-blue-600 rounded-full h-4"
+                  style={{ width: `${(stat.value / 255) * 100}%` }}
+                ></div>
+              </div>
+              <span className="ml-2 w-8">{stat.value}</span>
+            </div>
           ))}
+          {/* 合計種族値 */}
+          <div className="flex items-center">
+            <span className="w-24 text-right mr-2">合計</span>
+            <div className="flex-1 bg-gray-200 rounded-full h-4">
+              <div
+                className="bg-blue-600 rounded-full h-4"
+                style={{ width: `${(data?.baseStats?.reduce((sum, stat) => sum + stat.value, 0) / 780) * 100}%` }}
+              ></div>
+            </div>
+            <span className="ml-2 w-8">{data?.baseStats?.reduce((sum, stat) => sum + stat.value, 0)}</span>
+          </div>
         </div>
       </div>
       <div className="mt-4 flex justify-between">
