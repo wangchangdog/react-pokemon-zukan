@@ -5,6 +5,8 @@ import { Link, useParams } from 'react-router-dom';
 import { fetchPokemonDetail } from '../api/pokemonDetail';
 import PokemonTypeLabel from '../components/PokemonTypeLabel';
 import { apiQueryKeys } from '../queryKeys';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const PokemonDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,7 +21,7 @@ const PokemonDetail: React.FC = () => {
     console.log(data);
   }, [data])
 
-  if (isLoading) return <div>読み込み中...</div>;
+  if (isLoading) return <PokemonDetailSkeleton />;
   if (error instanceof Error) return <div>エラー: {error.message}</div>;
   if (!data) return <div>ポケモンが見つかりません</div>;
 
@@ -73,6 +75,43 @@ const PokemonDetail: React.FC = () => {
         {/* 0は前へがないので非表示 */}
         {Number(id) !== 1 ? <Link to={`/pokemon/${Number(id) - 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">前へ</Link> : <span />}
         <Link to={`/pokemon/${Number(id) + 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">次へ</Link>
+      </div>
+    </div>
+  );
+};
+
+const PokemonDetailSkeleton: React.FC = () => {
+  return (
+    <div className="p-4 max-w-[400px] m-auto">
+      <div className="px-4 py-2 bg-blue-500 text-white rounded-md mb-4 w-24">
+        <Skeleton />
+      </div>
+      <div className="mt-4 bg-white shadow-md rounded p-8 flex flex-col items-center gap-4">
+        <Skeleton circle={true} width={160} height={160} />
+        <Skeleton width={200} height={24} />
+        <Skeleton width={300} height={60} />
+        <div className="grid grid-cols-2 gap-2 w-full">
+          <Skeleton width={100} height={24} />
+          <Skeleton width={100} height={24} />
+        </div>
+        <div className="grid grid-cols-2 gap-2 w-full">
+          <Skeleton width={100} height={24} />
+          <Skeleton width={100} height={24} />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-x-2 w-full">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="flex items-center">
+              <Skeleton width={60} height={20} />
+              <div className="flex-1 ml-2">
+                <Skeleton height={20} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-4 flex justify-between">
+        <Skeleton width={80} height={36} />
+        <Skeleton width={80} height={36} />
       </div>
     </div>
   );
