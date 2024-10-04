@@ -1,12 +1,8 @@
 # Reactポケモン図鑑
 
-<img width="301" alt="スクリーンショット 2024-10-05 1 18 37" src="https://github.com/user-attachments/assets/4325c964-2a5c-439e-8fdf-4352fafc1e1c">
-<img width="301" alt="スクリーンショット 2024-10-05 1 19 10" src="https://github.com/user-attachments/assets/e882772f-31a0-41bf-bd31-c8339efe1b88">
-
-
 ## 概要
 
-**Reactポケモン図鑑**は、ReactとTypeScriptを使用して開発されたポケモン図鑑アプリケーションです。本アプリは[PokeAPI](https://pokeapi.co/docs/v2)を利用してポケモンのデータを取得し、ユーザーがポケモンを一覧表示、詳細閲覧、検索、フィルタリング、ソートできる機能を提供します。レスポンシブデザインを採用し、モバイルファーストで設計されています。
+**Reactポケモン図鑑**は、ReactとTypeScriptを使用して開発されたポケモン図鑑アプリケーションです。本アプリは[PokeAPI](https://pokeapi.co/docs/v2)を利用してポケモンのデータを取得し、ユーザーがポケモンを一覧表示、詳細閲覧ができる機能を提供します。レスポンシブデザインを採用し、モバイルファーストで設計されています。
 
 ## 目次
 
@@ -30,9 +26,6 @@
 
 - **ポケモン一覧表示**: ポケモンの図鑑番号、名前、タイプ、特性などの基本情報を一覧で表示。
 - **詳細画面**: 選択したポケモンの詳細情報（種族値、説明文など）を閲覧可能。
-- **検索機能**: 図鑑番号、名前でポケモンを検索。
-- **フィルタリング**: ポケモンのタイプや特性で絞り込み。
-- **ソート機能**: 図鑑番号や各種族値（HP、攻撃、防御、特攻、特防、素早さ、合計種族値）でポケモンを並べ替え。
 - **レスポンシブデザイン**: モバイルデバイスからデスクトップまで、様々な画面サイズに対応。
 - **パフォーマンス最適化**: Tanstack Queryを使用した効率的なデータフェッチングとキャッシング。
 
@@ -53,9 +46,11 @@
 
 ## デモ
 
-[ポケモン図鑑デモサイト](https://your-demo-url.com)
+[ポケモン図鑑デモサイト](https://)
 
-![デモスクリーンショット](https://raw.githubusercontent.com/your-username/react-pokemon-zukan/main/public/demo-screenshot.png)
+<img width="301" alt="スクリーンショット 2024-10-05 1 18 37" src="https://github.com/user-attachments/assets/4325c964-2a5c-439e-8fdf-4352fafc1e1c">
+<img width="301" alt="スクリーンショット 2024-10-05 1 19 10" src="https://github.com/user-attachments/assets/e882772f-31a0-41bf-bd31-c8339efe1b88">
+
 
 ## インストール方法
 
