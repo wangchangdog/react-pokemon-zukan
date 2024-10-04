@@ -1,6 +1,8 @@
 # Reactポケモン図鑑
 
-![ポケモン図鑑](https://raw.githubusercontent.com/your-username/react-pokemon-zukan/main/public/pokemon-zukan.png)
+<img width="301" alt="スクリーンショット 2024-10-05 1 18 37" src="https://github.com/user-attachments/assets/4325c964-2a5c-439e-8fdf-4352fafc1e1c">
+<img width="301" alt="スクリーンショット 2024-10-05 1 19 10" src="https://github.com/user-attachments/assets/e882772f-31a0-41bf-bd31-c8339efe1b88">
+
 
 ## 概要
 
