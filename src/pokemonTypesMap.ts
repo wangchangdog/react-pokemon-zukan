@@ -1,3 +1,4 @@
+// src/pokemonTypesMap.ts
 // ポケモンのタイプと色を対応させる
 export const pokemonTypesMap = [
   {
