@@ -1,5 +1,9 @@
 # Reactポケモン図鑑
 
+## 実際のReactアプリ
+
+https://wangchangdog.github.io/react-pokemon-zukan/
+
 ## 概要
 
 **Reactポケモン図鑑**は、ReactとTypeScriptを使用して開発されたポケモン図鑑アプリケーションです。本アプリは[PokeAPI](https://pokeapi.co/docs/v2)を利用してポケモンのデータを取得し、ユーザーがポケモンを一覧表示、詳細閲覧ができる機能を提供します。レスポンシブデザインを採用し、モバイルファーストで設計されています。
