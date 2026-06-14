@@ -1,6 +1,6 @@
 // src/pages/PokemonDetail.tsx
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchPokemonDetail } from '../api/pokemonDetail';
 import PokemonTypeLabel from '../components/PokemonTypeLabel';
@@ -16,10 +16,6 @@ const PokemonDetail: React.FC = () => {
     queryFn: () => fetchPokemonDetail(Number(id)),
     enabled: !!id,
   });
-
-  useEffect(() => {
-    console.log(data);
-  }, [data])
 
   if (isLoading) return <PokemonDetailSkeleton />;
   if (error instanceof Error) return <div>エラー: {error.message}</div>;

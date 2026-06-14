@@ -27,7 +27,7 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
   }
   const speciesData = await speciesResponse.json();
   const japaneseNameEntry = speciesData.names.find(
-    (nameEntry: Name) => nameEntry.language.name === 'ja'
+    (nameEntry: Name) => nameEntry.language.name === 'ja-Hrkt'
   );
   const japaneseName = japaneseNameEntry ? japaneseNameEntry.name : data.name;
 
@@ -62,11 +62,9 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     };
   }));
 
-  console.log(baseStats);
-
   // 説明文の取得
   const flavorTextEntry = speciesData.flavor_text_entries.find(
-    (entry: FlavorTextEntry) => entry.language.name === 'ja'
+    (entry: FlavorTextEntry) => entry.language.name === 'ja-Hrkt'
   );
   const description = flavorTextEntry
     ? flavorTextEntry.flavor_text.replace(/\f/g, ' ')
@@ -83,4 +81,3 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     baseStats,
   };
 };
-

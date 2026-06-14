@@ -28,10 +28,10 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 ## 特徴
 
-- **ポケモン一覧表示**: ポケモンの図鑑番号、名前、タイプ、特性などの基本情報を一覧で表示。
+- **ポケモン一覧表示**: ポケモンの図鑑番号と日本語名をカード形式で一覧表示。
 - **詳細画面**: 選択したポケモンの詳細情報（種族値、説明文など）を閲覧可能。
 - **レスポンシブデザイン**: モバイルデバイスからデスクトップまで、様々な画面サイズに対応。
-- **パフォーマンス最適化**: Tanstack Queryを使用した効率的なデータフェッチングとキャッシング。
+- **パフォーマンス最適化**: TanStack Queryを使用した効率的なデータフェッチングとキャッシング。
 
 ## 技術スタック
 
@@ -41,8 +41,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
   - [Vite](https://vitejs.dev/)
   - [React Router](https://reactrouter.com/)
   - [Tailwind CSS](https://tailwindcss.com/)
-  - [shadcn/ui](https://ui.shadcn.com/)
-  - [Tanstack Query](https://tanstack.com/query/latest)
+  - [TanStack Query](https://tanstack.com/query/latest)
   - [query-key-factory](https://github.com/lukemorales/query-key-factory)
 
 - **API**:
@@ -50,7 +49,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 ## デモ
 
-[ポケモン図鑑デモサイト](https://)
+[ポケモン図鑑デモサイト](https://wangchangdog.github.io/react-pokemon-zukan/)
 
 <img width="301" alt="スクリーンショット 2024-10-05 1 18 37" src="https://github.com/user-attachments/assets/4325c964-2a5c-439e-8fdf-4352fafc1e1c">
 <img width="301" alt="スクリーンショット 2024-10-05 1 19 10" src="https://github.com/user-attachments/assets/e882772f-31a0-41bf-bd31-c8339efe1b88">
@@ -92,23 +91,15 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 1. **ポケモン一覧の閲覧**
 
-   アプリケーションを開くと、ポケモンの一覧が表示されます。各ポケモンカードには図鑑番号、名前、タイプが表示されています。
+   アプリケーションを開くと、ポケモンの一覧が表示されます。各ポケモンカードには図鑑番号と日本語名が表示されています。画面下までスクロールすると続きを読み込みます。
 
 2. **詳細情報の確認**
 
    任意のポケモンカードをクリックすると、そのポケモンの詳細情報ページに移動します。詳細ページでは種族値や説明文など、より詳しい情報が確認できます。
 
-3. **検索機能の利用**
+3. **前後のポケモンへ移動**
 
-   上部の検索バーにポケモンの名前や図鑑番号を入力することで、該当するポケモンを素早く検索できます。
-
-4. **フィルタリング**
-
-   タイプや特性のフィルタリングオプションを使用して、特定の条件に合ったポケモンを絞り込むことができます。
-
-5. **ソート**
-
-   ソートオプションを使用して、図鑑番号や種族値に基づいてポケモンを並べ替えることができます。
+   詳細ページ下部の「前へ」「次へ」リンクから、隣の図鑑番号のポケモンへ移動できます。
 
 ## プロジェクト構成
 
@@ -127,8 +118,6 @@ react-pokemon-zukan/
 │   │   ├── Navigation.tsx
 │   │   ├── Footer.tsx
 │   │   └── PokemonCard.tsx
-│   ├── hooks/
-│   │   └── usePokemon.ts
 │   ├── pages/
 │   │   ├── PokemonList.tsx
 │   │   └── PokemonDetail.tsx
