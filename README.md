@@ -21,9 +21,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
     - [手順](#手順)
   - [使用方法](#使用方法)
   - [プロジェクト構成](#プロジェクト構成)
-  - [開発環境](#開発環境)
   - [貢献方法](#貢献方法)
-  - [ライセンス](#ライセンス)
   - [お問い合わせ](#お問い合わせ)
 
 ## 特徴
@@ -67,7 +65,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 1. **リポジトリのクローン**
 
    ```bash
-   git clone https://github.com/your-username/react-pokemon-zukan.git
+   git clone https://github.com/wangchangdog/react-pokemon-zukan.git
    cd react-pokemon-zukan
    ```
 
@@ -106,37 +104,37 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 ```
 react-pokemon-zukan/
 ├── public/
-│   ├── pokemon-zukan.png
-│   └── demo-screenshot.png
+│   ├── 404.html
+│   └── favicon.svg
 ├── src/
 │   ├── api/
+│   │   ├── common.type.ts
 │   │   ├── pokemon.ts
+│   │   ├── pokemon.type.ts
+│   │   ├── pokemonDetail.ts
 │   │   ├── pokemonSpecies.ts
 │   │   └── pokemonWithJapaneseName.ts
 │   ├── components/
 │   │   ├── Header.tsx
 │   │   ├── Navigation.tsx
 │   │   ├── Footer.tsx
-│   │   └── PokemonCard.tsx
+│   │   ├── PokemonCard.tsx
+│   │   └── PokemonTypeLabel.tsx
 │   ├── pages/
 │   │   ├── PokemonList.tsx
 │   │   └── PokemonDetail.tsx
-│   ├── queryKeys.ts
 │   ├── App.tsx
+│   ├── config.ts
+│   ├── queryKeys.ts
 │   ├── main.tsx
 │   └── index.css
 ├── .gitignore
 ├── package.json
 ├── tailwind.config.js
+├── vite.config.ts
 ├── tsconfig.json
 └── README.md
 ```
-
-## 開発環境
-
-- **OS**: macOS
-- **ユーザー名**: ktc
-- **プロジェクトディレクトリ**: `/Users/ktc/12345678/react-pokemon-zukan`
 
 ## 貢献方法
 
@@ -166,10 +164,6 @@ react-pokemon-zukan/
 
    GitHub上でプルリクエストを作成してください。
 
-## ライセンス
-
-このプロジェクトはMITライセンスのもとで公開されています。詳細については、[LICENSE](./LICENSE)ファイルをご覧ください。
-
 ## お問い合わせ
 
-質問やフィードバックがございましたら、[issues](https://github.com/your-username/react-pokemon-zukan/issues)にてご連絡ください。
+質問やフィードバックがございましたら、[issues](https://github.com/wangchangdog/react-pokemon-zukan/issues)にてご連絡ください。
