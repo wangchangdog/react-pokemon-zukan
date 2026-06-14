@@ -7,7 +7,15 @@
     <title>ポケモン図鑑</title>
     <script type="text/javascript">
       (function(l) {
-        if (l.search[1] === '/' ) {
+        var redirectedPath = new URLSearchParams(l.search).get('p');
+        if (redirectedPath) {
+          var query = new URLSearchParams(l.search).get('q');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + redirectedPath.replace(/~and~/g, '&') +
+            (query ? '?' + query.replace(/~and~/g, '&') : '') +
+            l.hash
+          );
+        } else if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');

@@ -12,7 +12,7 @@ const PokemonDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: [apiQueryKeys.pokemon.detail(Number(id))],
+    queryKey: apiQueryKeys.pokemon.detail(Number(id)).queryKey,
     queryFn: () => fetchPokemonDetail(Number(id)),
     enabled: !!id,
   });
@@ -33,9 +33,9 @@ const PokemonDetail: React.FC = () => {
             <PokemonTypeLabel key={type} type={type} />
           ))}
         </div>
-          <span className="w-fit whitespace-nowrap text-right">特性</span>
-        <div className="flex gap-2">
-          <div className="grid grid-cols-2 gap-2 w-full">
+        <div className="w-full">
+          <h2 className="mb-2 font-semibold">特性</h2>
+          <div className="grid grid-cols-2 gap-2">
             {data?.abilities?.map((ability) => (
               <span key={ability}>{ability}</span>
             ))}
@@ -68,7 +68,7 @@ const PokemonDetail: React.FC = () => {
         </div>
       </div>
       <div className="mt-4 flex justify-between">
-        {/* 0は前へがないので非表示 */}
+        {/* No.1では前へを非表示 */}
         {Number(id) !== 1 ? <Link to={`/pokemon/${Number(id) - 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">前へ</Link> : <span />}
         <Link to={`/pokemon/${Number(id) + 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">次へ</Link>
       </div>
