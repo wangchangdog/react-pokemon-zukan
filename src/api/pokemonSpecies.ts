@@ -18,7 +18,9 @@ export const fetchPokemonJapaneseName = async (speciesUrl: string): Promise<stri
     throw new Error('ポケモン種族情報の取得に失敗しました');
   }
     const data: SpeciesData = await response.json();
-    const japaneseNameEntry = data.names.find(nameEntry => nameEntry.language.name === 'ja-Hrkt');
+    const japaneseNameEntry =
+      data.names.find(nameEntry => nameEntry.language.name === 'ja-hrkt') ??
+      data.names.find(nameEntry => nameEntry.language.name === 'ja');
     return japaneseNameEntry ? japaneseNameEntry.name : data.names[0].name;
   } catch (error) {
     console.error('ポケモン種族情報の取得に失敗しました', error);

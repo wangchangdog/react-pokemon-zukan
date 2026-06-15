@@ -1,9 +1,9 @@
 // src/components/Navigation.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
-  const pathname = window.location.pathname;
+  const { pathname } = useLocation();
 
   return (
     <nav className="bg-gray-100 p-4">

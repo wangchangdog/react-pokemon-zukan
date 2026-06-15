@@ -17,7 +17,7 @@ const PokemonList: React.FC = () => {
     status,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: [apiQueryKeys.pokemon.list()],
+    queryKey: apiQueryKeys.pokemon.list().queryKey,
     queryFn: ({ pageParam = 0 }) => fetchPokemonListWithJapaneseNames(pageParam),
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages) => {

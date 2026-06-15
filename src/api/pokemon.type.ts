@@ -50,11 +50,6 @@ export interface PokemonStat {
   base_stat: number;
 }
 
-export interface PokemonType {
-  slot: number;
-  type: NamedAPIResource;
-}
-
 export interface FlavorTextEntry {
   flavor_text: string;
   language: NamedAPIResource;

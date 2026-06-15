@@ -26,9 +26,9 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     throw new Error('ポケモン種族情報の取得に失敗しました');
   }
   const speciesData = await speciesResponse.json();
-  const japaneseNameEntry = speciesData.names.find(
-    (nameEntry: Name) => nameEntry.language.name === 'ja'
-  );
+  const japaneseNameEntry =
+    speciesData.names.find((nameEntry: Name) => nameEntry.language.name === 'ja-hrkt') ??
+    speciesData.names.find((nameEntry: Name) => nameEntry.language.name === 'ja');
   const japaneseName = japaneseNameEntry ? japaneseNameEntry.name : data.name;
 
   // タイプの日本語名を取得
@@ -56,17 +56,18 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     // 日本語名を取得
     const japaneseStatData = await fetch(`https://pokeapi.co/api/v2/stat/${stat.stat.name}`);
     const japaneseStatDataJson = await japaneseStatData.json();
+    const japaneseStatName = japaneseStatDataJson.names.find(
+      (name: Name) => name.language.name === 'ja-hrkt'
+    );
     return {
-      name: japaneseStatDataJson.names.find((name: Name) => name.language.name === "ja-Hrkt").name,
+      name: japaneseStatName ? japaneseStatName.name : stat.stat.name,
       value: stat.base_stat,
     };
   }));
 
-  console.log(baseStats);
-
   // 説明文の取得
   const flavorTextEntry = speciesData.flavor_text_entries.find(
-    (entry: FlavorTextEntry) => entry.language.name === 'ja'
+    (entry: FlavorTextEntry) => entry.language.name === 'ja-hrkt'
   );
   const description = flavorTextEntry
     ? flavorTextEntry.flavor_text.replace(/\f/g, ' ')
@@ -83,4 +84,3 @@ export const fetchPokemonDetail = async (id: number): Promise<PokemonDetail> => 
     baseStats,
   };
 };
-
