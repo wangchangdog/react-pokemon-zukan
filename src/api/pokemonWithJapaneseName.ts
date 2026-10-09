@@ -28,18 +28,20 @@ export const fetchPokemonListWithJapaneseNames = async (offset: number = 0, limi
   // 各ポケモンの詳細情報を取得し、日本語名を追加
   const updatedResults: PokemonWithJapaneseName[] = await Promise.all(
     pokemonList.results.map(async (pokemon) => {
-      // ポケモン種族のURLを生成
-      const speciesUrl = pokemon.url.replace('https://pokeapi.co/api/v2/pokemon/', 'https://pokeapi.co/api/v2/pokemon-species/');
-      // 日本語名を取得
-      const japaneseName = await fetchPokemonJapaneseName(speciesUrl);
       // ポケモンの詳細情報を取得
-      const pokemonDetails: Pokemon = await fetch(pokemon.url).then(res => res.json());
+      const response = await fetch(pokemon.url);
+      if (!response.ok) {
+        throw new Error('ポケモンの詳細情報の取得に失敗しました');
+      }
+      const pokemonDetails: Pokemon = await response.json();
+      // 別フォルムではポケモンと種族の番号が異なるため、APIが返すURLを使う
+      const japaneseName = await fetchPokemonJapaneseName(pokemonDetails.species.url);
       
       // 必要な情報を組み合わせて返す
       return {
         ...pokemon,
         japaneseName,
-        number: pokemonDetails.id.toString(),
+        number: pokemonDetails.species.url.split('/').filter(Boolean).pop() ?? pokemonDetails.id.toString(),
         types: pokemonDetails.types.map((t) => ({
           type: {
             name: t.type.name

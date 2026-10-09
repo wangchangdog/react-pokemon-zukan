@@ -3,6 +3,7 @@ import { createQueryKeys, mergeQueryKeys } from "@lukemorales/query-key-factory"
 
 const pokemonQueryKeys = createQueryKeys("pokemon", {
     list: () => ["list"],
+    index: () => ["index"],
     detail: (id: number) => ["detail", id],
 });
 

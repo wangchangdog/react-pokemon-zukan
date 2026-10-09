@@ -1,5 +1,22 @@
 # Reactポケモン図鑑
 
+このリポジトリは、一覧・詳細・画面遷移の動作や実装を確認するための完成見本です。授業では[ポケモン図鑑の教材サイト](https://react-pokemon-zukan-doc.vercel.app/)に従い、自分のGitHubリポジトリでアプリを制作します。
+
+これから授業の制作を始める場合は、[GitHubリポジトリの作成](https://react-pokemon-zukan-doc.vercel.app/docs/section-04-github-repository)と[Viteプロジェクトのセットアップ](https://react-pokemon-zukan-doc.vercel.app/docs/section-05-vite-project-setup)へ進んでください。このREADMEのクローン手順は、完成見本を手元で動かして調べる場合に使います。
+
+## 授業教材との違い
+
+授業教材と完成見本では、一部の設定が異なります。自分の制作途中のアプリへ設定ファイルを丸ごとコピーせず、授業教材の該当手順に合わせてください。
+
+| 項目 | 授業教材 | この完成見本 |
+| --- | --- | --- |
+| Node.jsとパッケージ管理 | Node.js 24系とnpmを使います。 | 同じくNode.js 24系とnpmを使います。自動検証と公開用のワークフローも24系です。 |
+| Tailwind CSS | バージョン4と`@tailwindcss/vite`を使います。 | バージョン3とPostCSSを使い、`tailwind.config.js`と`postcss.config.js`で設定します。 |
+| GitHub Pagesでの画面遷移 | 公開手順でHashRouterへ切り替え、`/#/pokemon/1`のようなURLを使います。 | BrowserRouterを使い、`/pokemon/1`のようなURLを扱います。直接アクセス時は`public/404.html`と`index.html`で経路を復元します。 |
+| 参照するコード | 手順に沿って必要な部分を順番に実装します。 | 一覧・詳細・データ取得などが実装済みです。ファイルの役割や処理のつながりを調べるために参照します。 |
+
+[公開手順](https://react-pokemon-zukan-doc.vercel.app/docs/section-14-github-pages-deploy)で案内するHashRouterと、この完成見本の404対応は、同じ設定ではありません。完成見本では両方の方式を重ねず、既存のBrowserRouterと404対応を維持しています。
+
 ## 実際のReactアプリ
 
 https://wangchangdog.github.io/react-pokemon-zukan/
@@ -12,6 +29,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 - [Reactポケモン図鑑](#reactポケモン図鑑)
   - [概要](#概要)
+  - [授業教材との違い](#授業教材との違い)
   - [目次](#目次)
   - [特徴](#特徴)
   - [技術スタック](#技術スタック)
@@ -55,35 +73,43 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 ## インストール方法
 
+以下は完成見本を手元で動かすための手順です。授業用の自分のリポジトリで制作する場合は、冒頭の教材リンクから進めます。
+
 ### 前提条件
 
-- **Node.js**: バージョン20以上
+- **Node.js**: バージョン24系（24.x）
 - **Git**: バージョン2以上
 
 ### 手順
 
 1. **リポジトリのクローン**
 
-   ```bash
+   ````bash
    git clone https://github.com/wangchangdog/react-pokemon-zukan.git
    cd react-pokemon-zukan
-   ```
+   ````
 
 2. **依存関係のインストール**
 
-   ```bash
+   ````bash
    npm install
-   ```
+   ````
 
 3. **開発サーバーの起動**
 
-   ```bash
+   ````bash
    npm run dev
-   ```
+   ````
 
 4. **ブラウザで確認**
 
-   ブラウザで `http://localhost:5173` にアクセスし、アプリケーションが動作していることを確認します。
+   ターミナルに表示された`Local`のURLをブラウザで開きます。通常は`http://localhost:5173`です。別のポート番号が表示された場合は、その番号を使います。
+
+次回からは`react-pokemon-zukan`フォルダで`npm run dev`を実行します。すでにクローンしたリポジトリやViteプロジェクトを作り直す必要はありません。停止するときは、開発サーバーを実行しているターミナルでCtrl+Cを押します。
+
+### 公開用ビルドの確認
+
+`npm run build`が成功したら、`npm run preview`を実行し、表示されたURLを開きます。公開先と同じ`/react-pokemon-zukan/`の配下で、一覧と詳細への移動、詳細URLの再読み込みを確認します。GitHub Pagesにおける404ページからの経路復元は、公開後にも確認します。
 
 ## 使用方法
 
@@ -97,11 +123,15 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 
 3. **前後のポケモンへ移動**
 
-   詳細ページ下部の「前へ」「次へ」リンクから、隣の図鑑番号のポケモンへ移動できます。
+   詳細ページ下部の「前へ」「次へ」リンクから、一覧にある前後のポケモンへ移動できます。先頭では「前へ」、末尾では「次へ」を表示しません。別フォルムなどでAPIの番号に間隔があっても、実在する項目へ移動します。
+
+4. **読み込みに失敗した場合**
+
+   接続を確認して「再読み込み」を押します。続きを取得できなかった場合も、読み込み済みの一覧は残り、「続きを再読み込み」からやり直せます。不正なURLや存在しない番号では、表示されるリンクから一覧へ戻れます。
 
 ## プロジェクト構成
 
-```
+````
 react-pokemon-zukan/
 ├── public/
 │   ├── 404.html
@@ -134,7 +164,7 @@ react-pokemon-zukan/
 ├── vite.config.ts
 ├── tsconfig.json
 └── README.md
-```
+````
 
 ## 貢献方法
 
@@ -144,21 +174,21 @@ react-pokemon-zukan/
 
 2. **ブランチを作成する**
 
-   ```bash
+   ````bash
    git checkout -b feature/新機能
-   ```
+   ````
 
 3. **変更をコミットする**
 
-   ```bash
+   ````bash
    git commit -m "新機能の追加"
-   ```
+   ````
 
 4. **プッシュする**
 
-   ```bash
+   ````bash
    git push origin feature/新機能
-   ```
+   ````
 
 5. **プルリクエストを作成する**
 
