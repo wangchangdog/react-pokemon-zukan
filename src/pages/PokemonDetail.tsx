@@ -2,7 +2,8 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { fetchPokemonDetail } from '../api/pokemonDetail';
+import { fetchPokemonDetail, PokemonNotFoundError } from '../api/pokemonDetail';
+import { fetchPokemonIndex } from '../api/pokemon';
 import PokemonTypeLabel from '../components/PokemonTypeLabel';
 import { apiQueryKeys } from '../queryKeys';
 import Skeleton from 'react-loading-skeleton';
@@ -10,23 +11,74 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const PokemonDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const pokemonId = Number(id);
+  const isValidId = /^[1-9]\d*$/.test(id ?? '') && Number.isSafeInteger(pokemonId);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: apiQueryKeys.pokemon.detail(Number(id)).queryKey,
-    queryFn: () => fetchPokemonDetail(Number(id)),
-    enabled: !!id,
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
+    queryKey: apiQueryKeys.pokemon.detail(pokemonId).queryKey,
+    queryFn: () => fetchPokemonDetail(pokemonId),
+    enabled: isValidId,
+    retry: (failureCount, queryError) => !(queryError instanceof PokemonNotFoundError) && failureCount < 3,
   });
 
+  const { data: pokemonIndex, isError: indexError, isFetching: isFetchingIndex, refetch: refetchIndex } = useQuery({
+    queryKey: apiQueryKeys.pokemon.index().queryKey,
+    queryFn: fetchPokemonIndex,
+    enabled: isValidId,
+    staleTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+  });
+  const currentIndex = pokemonIndex?.findIndex((pokemon) =>
+    Number(pokemon.url.split('/').filter(Boolean).pop()) === pokemonId
+  ) ?? -1;
+  const previousPokemon = currentIndex > 0 ? pokemonIndex?.[currentIndex - 1] : undefined;
+  const nextPokemon = currentIndex >= 0 ? pokemonIndex?.[currentIndex + 1] : undefined;
+
+  if (!isValidId) {
+    return (
+      <div className="p-4">
+        <p role="alert">図鑑番号が正しくありません。</p>
+        <Link to="/" className="mt-3 inline-block text-blue-500 underline">一覧に戻る</Link>
+      </div>
+    );
+  }
   if (isLoading) return <PokemonDetailSkeleton />;
-  if (error instanceof Error) return <div>エラー: {error.message}</div>;
-  if (!data) return <div>ポケモンが見つかりません</div>;
+  if (!data) {
+    const notFound = error instanceof PokemonNotFoundError;
+    return (
+      <div className="p-4">
+        <p role="alert">{notFound ? 'ポケモンが見つかりません。' : 'ポケモンを読み込めませんでした。接続を確認して、もう一度お試しください。'}</p>
+        <div className="mt-3 flex items-center gap-4">
+          <Link to="/" className="text-blue-500 underline">一覧に戻る</Link>
+          {!notFound ? (
+            <button type="button" onClick={() => void refetch()} disabled={isFetching} className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50">
+              再読み込み
+            </button>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+  const totalStats = data.baseStats.reduce((sum, stat) => sum + stat.value, 0);
 
   return (
     <div className="p-4 max-w-[400px] m-auto">
       <Link to="/" className="px-4 py-2 bg-blue-500 text-white rounded-md mb-4">← 一覧に戻る</Link>
+      {error ? (
+        <div className="mt-4">
+          <p role="alert">情報を更新できませんでした。前に読み込んだ内容を表示しています。</p>
+          <button type="button" onClick={() => void refetch()} disabled={isFetching} className="mt-2 text-blue-500 underline disabled:opacity-50">
+            再読み込み
+          </button>
+        </div>
+      ) : null}
       <div className="mt-4 bg-white shadow-md rounded p-8 flex flex-col items-center gap-4">
-        <img src={data.image} alt={data.japaneseName} className="w-40 h-40" />
-        <h1 className="mt-4 text-2xl font-bold">{data.japaneseName} (#{data.id})</h1>
+        {data.image ? (
+          <img src={data.image} alt={data.japaneseName} className="w-40 h-40" />
+        ) : (
+          <div className="w-40 h-40 flex items-center justify-center text-gray-500">画像がありません</div>
+        )}
+        <h1 className="mt-4 text-2xl font-bold">{data.japaneseName} (#{data.number})</h1>
         <p className="mt-2 text-justify">{data.description}</p>
         <div className="grid grid-cols-2 gap-2">
           {data?.types?.map((type) => (
@@ -48,7 +100,7 @@ const PokemonDetail: React.FC = () => {
               <div className="flex-1 bg-gray-200 rounded-full h-4">
                 <div
                   className="bg-blue-600 rounded-full h-4"
-                  style={{ width: `${(stat.value / 255) * 100}%` }}
+                  style={{ width: `${Math.min((stat.value / 255) * 100, 100)}%` }}
                 ></div>
               </div>
               <span className="ml-2 w-8">{stat.value}</span>
@@ -60,18 +112,26 @@ const PokemonDetail: React.FC = () => {
             <div className="flex-1 bg-gray-200 rounded-full h-4">
               <div
                 className="bg-blue-600 rounded-full h-4"
-                style={{ width: `${(data?.baseStats?.reduce((sum, stat) => sum + stat.value, 0) / 780) * 100}%` }}
+                style={{ width: `${Math.min((totalStats / 780) * 100, 100)}%` }}
               ></div>
             </div>
-            <span className="ml-2 w-8">{data?.baseStats?.reduce((sum, stat) => sum + stat.value, 0)}</span>
+            <span className="ml-2 w-8">{totalStats}</span>
           </div>
         </div>
       </div>
-      <div className="mt-4 flex justify-between">
-        {/* No.1では前へを非表示 */}
-        {Number(id) !== 1 ? <Link to={`/pokemon/${Number(id) - 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">前へ</Link> : <span />}
-        <Link to={`/pokemon/${Number(id) + 1}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">次へ</Link>
-      </div>
+      {indexError && !pokemonIndex ? (
+        <div className="mt-4">
+          <p role="alert">前後のポケモンを確認できませんでした。</p>
+          <button type="button" onClick={() => void refetchIndex()} disabled={isFetchingIndex} className="mt-2 text-blue-500 underline disabled:opacity-50">
+            再読み込み
+          </button>
+        </div>
+      ) : (
+        <div className="mt-4 flex justify-between">
+          {previousPokemon ? <Link to={`/pokemon/${previousPokemon.url.split('/').filter(Boolean).pop()}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">前へ</Link> : <span />}
+          {nextPokemon ? <Link to={`/pokemon/${nextPokemon.url.split('/').filter(Boolean).pop()}`} className="px-4 py-2 bg-blue-500 text-white rounded-md">次へ</Link> : null}
+        </div>
+      )}
     </div>
   );
 };
@@ -85,7 +145,7 @@ const PokemonDetailSkeleton: React.FC = () => {
       <div className="mt-4 bg-white shadow-md rounded p-8 flex flex-col items-center gap-4">
         <Skeleton circle={true} width={160} height={160} />
         <Skeleton width={200} height={24} />
-        <Skeleton width={300} height={60} />
+        <div className="w-full"><Skeleton height={60} /></div>
         <div className="grid grid-cols-2 gap-2 w-full">
           <Skeleton width={100} height={24} />
           <Skeleton width={100} height={24} />

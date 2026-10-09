@@ -14,8 +14,11 @@ const PokemonList: React.FC = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
+    isFetching,
     status,
     isLoading,
+    refetch,
   } = useInfiniteQuery({
     queryKey: apiQueryKeys.pokemon.list().queryKey,
     queryFn: ({ pageParam = 0 }) => fetchPokemonListWithJapaneseNames(pageParam),
@@ -31,10 +34,12 @@ const PokemonList: React.FC = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+        if (entries[0].isIntersecting && hasNextPage && !isFetching && !isFetchNextPageError) {
+          void fetchNextPage();
         }
       },
       { threshold: 1.0 }
@@ -45,13 +50,30 @@ const PokemonList: React.FC = () => {
     }
 
     return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetching, isFetchNextPageError]);
 
   if (isLoading) return <PokemonListSkeleton />;
-  if (status === 'error') return <div>エラーが発生しました</div>;
+  if (status === 'error' && !data) {
+    return (
+      <div className="p-4">
+        <p role="alert">ポケモン一覧を読み込めませんでした。接続を確認して、もう一度お試しください。</p>
+        <button type="button" onClick={() => void refetch()} disabled={isFetching} className="mt-3 px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50">
+          再読み込み
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">
+      {status === 'error' && !isFetchNextPageError ? (
+        <div className="mb-4">
+          <p role="alert">一覧を更新できませんでした。前に読み込んだ内容を表示しています。</p>
+          <button type="button" onClick={() => void refetch()} disabled={isFetching} className="mt-2 text-blue-500 underline disabled:opacity-50">
+            再読み込み
+          </button>
+        </div>
+      ) : null}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {data?.pages.map((page) =>
           page.results.map((pokemon: PokemonWithJapaneseName) => (
@@ -59,8 +81,19 @@ const PokemonList: React.FC = () => {
           ))
         )}
       </div>
-      <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
-        {isFetchingNextPage ? <Loader /> : hasNextPage ? '続きを読み込む' : ''}
+      <div ref={loadMoreRef} className="min-h-20 flex flex-col items-center justify-center gap-2 py-4">
+        {isFetchingNextPage ? <Loader /> : isFetchNextPageError ? (
+          <>
+            <p role="alert">続きの読み込みに失敗しました。</p>
+            <button type="button" onClick={() => void fetchNextPage()} disabled={isFetching} className="text-blue-500 underline disabled:opacity-50">
+              続きを再読み込み
+            </button>
+          </>
+        ) : hasNextPage ? (
+          <button type="button" onClick={() => void fetchNextPage()} disabled={isFetching} className="text-blue-500 underline disabled:opacity-50">
+            続きを読み込む
+          </button>
+        ) : null}
       </div>
     </div>
   );
@@ -68,7 +101,7 @@ const PokemonList: React.FC = () => {
 
 // ローダーコンポーネント
 const Loader: React.FC = () => (
-  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+  <div role="status" aria-label="読み込み中" className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
 );
 
 const PokemonListSkeleton: React.FC = () => {
