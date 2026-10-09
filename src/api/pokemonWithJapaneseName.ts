@@ -1,7 +1,8 @@
 // src/api/pokemonWithJapaneseName.ts
 import { INITIAL_POKEMON_LIST_LIMIT } from '../config';
-import { fetchPokemonList, PokemonListResult } from './pokemon';
-import { Pokemon } from './pokemon.type';
+import { fetchPokemonList } from './pokemon';
+import type { PokemonListResult } from './pokemon';
+import type { Pokemon } from './pokemon.type';
 import { fetchPokemonJapaneseName } from './pokemonSpecies';
 
 // ポケモンの日本語名を含む拡張情報を表す型
@@ -10,6 +11,8 @@ export type PokemonWithJapaneseName = {
   url: string;           // ポケモンの詳細情報を取得するためのURL
   japaneseName: string;  // ポケモンの日本語名
   number: string;        // ポケモンの図鑑番号
+  types: Pokemon['types'];       // タイプ情報
+  abilities: Pokemon['abilities']; // 特性情報
 };
 
 // 日本語名を含むポケモンリストの結果を表す型
@@ -42,16 +45,8 @@ export const fetchPokemonListWithJapaneseNames = async (offset: number = 0, limi
         ...pokemon,
         japaneseName,
         number: pokemonDetails.species.url.split('/').filter(Boolean).pop() ?? pokemonDetails.id.toString(),
-        types: pokemonDetails.types.map((t) => ({
-          type: {
-            name: t.type.name
-          }
-        })),
-        abilities: pokemonDetails.abilities.map((a) => ({
-          ability: {
-            name: a.ability.name
-          }
-        }))
+        types: pokemonDetails.types,
+        abilities: pokemonDetails.abilities,
       };
     })
   );

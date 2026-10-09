@@ -12,10 +12,20 @@
 | --- | --- | --- |
 | Node.jsとパッケージ管理 | Node.js 24系とnpmを使います。 | 同じくNode.js 24系とnpmを使います。自動検証と公開用のワークフローも24系です。 |
 | Tailwind CSS | バージョン4と`@tailwindcss/vite`を使います。 | バージョン3とPostCSSを使い、`tailwind.config.js`と`postcss.config.js`で設定します。 |
+| React・Viteの設定 | 自分のViteプロジェクトを作成したときの`package.json`と設定を使います。 | React 18・Vite 5の構成を維持しています。教材へ設定ファイルを移すためのテンプレートではありません。 |
+| クエリキー | 配列を定義し、`apiQueryKeys.pokemon.list`や`apiQueryKeys.pokemon.detail(id)`を`queryKey`へ渡します。 | `query-key-factory`を使い、`apiQueryKeys.pokemon.list().queryKey`や`apiQueryKeys.pokemon.detail(id).queryKey`を渡します。 |
 | GitHub Pagesでの画面遷移 | 公開手順でHashRouterへ切り替え、`/#/pokemon/1`のようなURLを使います。 | BrowserRouterを使い、`/pokemon/1`のようなURLを扱います。直接アクセス時は`public/404.html`と`index.html`で経路を復元します。 |
 | 参照するコード | 手順に沿って必要な部分を順番に実装します。 | 一覧・詳細・データ取得などが実装済みです。ファイルの役割や処理のつながりを調べるために参照します。 |
 
 [公開手順](https://react-pokemon-zukan-doc.vercel.app/docs/section-14-github-pages-deploy)で案内するHashRouterと、この完成見本の404対応は、同じ設定ではありません。完成見本では両方の方式を重ねず、既存のBrowserRouterと404対応を維持しています。
+
+## コードを読む順番
+
+まず`src/components/PokemonCard.tsx`で、Propsの`pokemon`が名前の表示と詳細へのリンクに使われることを確認します。次に`src/pages/PokemonList.tsx`の`queryFn`から`src/api/pokemonWithJapaneseName.ts`へ進み、取得結果が`data.pages`を通ってカードへ届く流れを追います。詳細は`src/pages/PokemonDetail.tsx`のURLのIDから、`src/api/pokemonDetail.ts`の返り値と画面表示を対応させます。
+
+再試行、前後移動の索引、スケルトン、タイプラベルの文字色計算は、動作を支える補助処理です。初めて読むときは、それぞれの目的と入出力を確認できれば十分です。計算式やすべての条件分岐を理解してから授業を進める必要はありません。
+
+自分の制作に取り入れるときは、[API](https://react-pokemon-zukan-doc.vercel.app/docs/section-09-pokeapi-usage) → [Queryの設定](https://react-pokemon-zukan-doc.vercel.app/docs/section-10-tanstack-query) → [一覧](https://react-pokemon-zukan-doc.vercel.app/docs/section-11-pokemon-list-screen) → [詳細](https://react-pokemon-zukan-doc.vercel.app/docs/section-12-pokemon-detail-screen)の作業順を使います。各章に新規作成・追記・置換の場所があります。クエリキーは定義と呼び出しが組なので、教材の定義と見本の`.queryKey`呼び出しを混ぜないようにします。
 
 ## 実際のReactアプリ
 
@@ -30,6 +40,7 @@ https://wangchangdog.github.io/react-pokemon-zukan/
 - [Reactポケモン図鑑](#reactポケモン図鑑)
   - [概要](#概要)
   - [授業教材との違い](#授業教材との違い)
+  - [コードを読む順番](#コードを読む順番)
   - [目次](#目次)
   - [特徴](#特徴)
   - [技術スタック](#技術スタック)
